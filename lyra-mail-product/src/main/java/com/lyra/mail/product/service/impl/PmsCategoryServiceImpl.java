@@ -34,6 +34,7 @@ public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryMapper, PmsCa
                 .stream()
                 .filter((category -> category.getParentCid() == 0))
                 .peek((category -> category.setChildren(getChildren(category, pmsCategories))))
+                .sorted((Comparator.comparingInt(category -> (category.getSort() == null ? 0 : category.getSort()))))
                 .collect(Collectors.toList());
 
         return treeCategoryList;
@@ -45,7 +46,9 @@ public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryMapper, PmsCa
                 .filter((category -> Objects.equals(root.getCatId(), category.getParentCid())))
                 .peek((category -> {
                     category.setChildren(this.getChildren(category, allCategory));
-                })).collect(Collectors.toList());
+                }))
+                .sorted((Comparator.comparingInt(category -> (category.getSort() == null ? 0 : category.getSort()))))
+                .collect(Collectors.toList());
 
         return children;
     }

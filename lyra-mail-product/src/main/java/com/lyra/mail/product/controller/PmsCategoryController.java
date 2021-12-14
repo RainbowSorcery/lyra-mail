@@ -45,6 +45,13 @@ public class PmsCategoryController {
         return Result.ok();
     }
 
+    @PostMapping("/update/sort")
+    public Result updateList(@RequestBody List<PmsCategory> pmsCategories) {
+        categoryService.updateBatchById(pmsCategories);
+
+        return Result.ok();
+    }
+
     @PostMapping("/add")
     public Result add(@RequestBody PmsCategory category) {
         if (category == null) {
