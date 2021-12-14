@@ -20,10 +20,44 @@
         <module>lyra-mail-order</module>
         <module>lyra-mail-product</module>
         <module>lyra-mail-ware</module>
+        <module>lyra-mail-generator</module>
+        <module>lyra-mall-common</module>
+        <module>lyra-mail-gateway</module>
+        <module>lyra-mail-admin</module>
     </modules>
+
+    <properties>
+        <mybatis.puls-version>3.4.3.4</mybatis.puls-version>
+
+        <swagger-version>2.0.1.RELEASE</swagger-version>
+    </properties>
+
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
+
+
+    </dependencies>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>3.10.2</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis.puls-version}</version>
+            </dependency>
+
+
+
+
+
+
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>

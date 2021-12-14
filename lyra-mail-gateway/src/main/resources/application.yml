@@ -1,0 +1,34 @@
+server:
+  port: 10001
+
+
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 10.0.4.3:8848
+        namespace: 17fff448-9ea4-46dd-8c3d-aba42dbf1fba
+    gateway:
+      routes:
+        - id: product-router
+          uri: lb://product-service
+          predicates:
+            - Path=/product-service/**
+          filters:
+            - StripPrefix=1
+        - id: admin-router
+          uri: lb://admin-service
+          predicates:
+            - Path=/admin-service/**
+          filters:
+            - StripPrefix=1
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods:
+              - GET
+              - POST
+  application:
+    name: gateway-service

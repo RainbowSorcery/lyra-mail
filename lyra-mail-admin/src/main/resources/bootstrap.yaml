@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: 10.0.4.3:8848
+      discovery:
+        namespace: 17fff448-9ea4-46dd-8c3d-aba42dbf1fba
+  application:
+    name: admin-service
+server:
+  port: 9000
