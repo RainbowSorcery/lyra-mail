@@ -29,11 +29,25 @@ public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryMapper, PmsCa
     @Override
     public List<PmsCategory> categoryListByTree() {
         List<PmsCategory> pmsCategories = categoryMapper.selectList(null);
-        List<PmsCategory> collect = pmsCategories.stream().filter((category) -> {
-            return category.getParentCid() == 0;
-        }).collect(Collectors.toList());
 
-        return collect;
+        List<PmsCategory> treeCategoryList = pmsCategories
+                .stream()
+                .filter((category -> category.getParentCid() == 0))
+                .peek((category -> category.setChildren(getChildren(category, pmsCategories))))
+                .collect(Collectors.toList());
+
+        return treeCategoryList;
+    }
+
+    private List<PmsCategory> getChildren(PmsCategory root, List<PmsCategory> allCategory) {
+        List<PmsCategory> children = allCategory
+                .stream()
+                .filter((category -> Objects.equals(root.getCatId(), category.getParentCid())))
+                .peek((category -> {
+                    category.setChildren(this.getChildren(category, allCategory));
+                })).collect(Collectors.toList());
+
+        return children;
     }
 
     @Override
