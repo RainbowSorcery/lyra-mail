@@ -3,13 +3,12 @@ package com.lyra.mail.product.controller;
 
 
 import com.lyra.mail.common.result.Result;
-import com.lyra.mail.common.utils.AliyunResources;
 import com.lyra.mail.product.entity.PmsCategory;
 import com.lyra.mail.product.service.IPmsCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.stereotype.Controller;
+
 
 import java.util.List;
 
@@ -27,8 +26,6 @@ public class PmsCategoryController {
     @Autowired
     private IPmsCategoryService categoryService;
 
-    @Autowired
-    private AliyunResources aliyunResources;
 
     @GetMapping("/list/tree")
     public Result treeList() {

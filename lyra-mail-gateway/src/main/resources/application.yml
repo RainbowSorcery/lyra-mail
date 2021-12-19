@@ -6,8 +6,8 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 10.0.4.3:8848
-        namespace: 17fff448-9ea4-46dd-8c3d-aba42dbf1fba
+        server-addr: 127.0.0.1:8848
+        namespace: a39d246a-d086-4559-9bff-89189f6d205c
     gateway:
       routes:
         - id: product-router
@@ -20,6 +20,12 @@ spring:
           uri: lb://admin-service
           predicates:
             - Path=/admin-service/**
+          filters:
+            - StripPrefix=1
+        - id: third-party-service
+          uri: lb://third-party-service
+          predicates:
+            - Path=/third-party-service/**
           filters:
             - StripPrefix=1
       globalcors:

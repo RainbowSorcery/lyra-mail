@@ -21,7 +21,7 @@ public class PmsBrand implements Serializable {
     /**
      * 品牌id
      */
-    @TableId(value = "brand_id", type = IdType.AUTO)
+    @TableId(value = "brand_id", type = IdType.NONE)
     private Long brandId;
 
     /**

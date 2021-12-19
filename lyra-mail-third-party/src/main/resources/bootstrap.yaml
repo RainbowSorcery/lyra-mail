@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: third-party-service
+  cloud:
+    nacos:
+      config:
+        file-extension: YAML
+        server-addr: 127.0.0.1:8848
+        shared-configs:
+          - data-id: nacos-register.YAML
+            refresh: true
+          - data-id: oss-config.YAML
+            refresh: true
+        namespace: a39d246a-d086-4559-9bff-89189f6d205c
+
+server:
+  port: 9001

@@ -1,9 +1,9 @@
 spring:
   cloud:
     nacos:
-      server-addr: 10.0.4.3:8848
+      server-addr: 127.0.0.1:8848
       discovery:
-        namespace: 17fff448-9ea4-46dd-8c3d-aba42dbf1fba
+        namespace: a39d246a-d086-4559-9bff-89189f6d205c
   application:
     name: admin-service
 server:
