@@ -29,9 +29,6 @@ public class OSSController {
     @Value("${alibaba.cloud.access-key}")
     private String accessId;
 
-    @Value("${alibaba.cloud.secret-key}")
-    private String accessKey;
-
     @Value("${alibaba.cloud.oss.endpoint}")
     private String endpoint;
 
