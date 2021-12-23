@@ -3,6 +3,14 @@ package com.lyra.mail.product.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.lyra.mail.common.valid.AddValid;
+import com.lyra.mail.common.valid.UpdateValid;
+import org.hibernate.validator.constraints.URL;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.io.Serializable;
 
 /**
@@ -22,31 +30,39 @@ public class PmsAttrGroup implements Serializable {
      * 分组id
      */
     @TableId(value = "attr_group_id", type = IdType.AUTO)
+    @NotNull(message = "修改时 attrGroupId不能为空", groups = {UpdateValid.class})
+    @Null(message = "添加时 attrGroupId必须为空", groups = {AddValid.class})
     private Long attrGroupId;
 
     /**
      * 组名
      */
+    @NotBlank(message = "attrGroupId名称不能为空", groups = {AddValid.class})
     private String attrGroupName;
 
     /**
      * 排序
      */
+    @Min(value = 0, message = "排序必须大于1", groups = {AddValid.class, UpdateValid.class})
     private Integer sort;
 
     /**
      * 描述
      */
+    @NotBlank(message = "简介不能为空", groups = {AddValid.class})
     private String descript;
 
     /**
      * 组图标
      */
+    @NotBlank(message = "icon不能为空", groups = {AddValid.class})
+    @URL(message = "icon必须为合法url", groups = {AddValid.class, UpdateValid.class})
     private String icon;
 
     /**
      * 所属分类id
      */
+    @Min(value = 0, message = "categoryId必须为合法数字", groups = {AddValid.class, UpdateValid.class})
     private Long catelogId;
 
     public Long getAttrGroupId() {

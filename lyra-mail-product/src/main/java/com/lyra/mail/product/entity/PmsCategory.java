@@ -1,6 +1,7 @@
 package com.lyra.mail.product.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
 import java.util.List;
@@ -66,6 +67,7 @@ public class PmsCategory implements Serializable {
     private Integer productCount;
 
     @TableField(exist = false)
+    @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
     private List<PmsCategory> children;
 
     public List<PmsCategory> getChildren() {
