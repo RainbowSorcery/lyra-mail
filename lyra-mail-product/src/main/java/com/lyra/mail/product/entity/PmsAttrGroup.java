@@ -1,6 +1,7 @@
 package com.lyra.mail.product.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lyra.mail.common.valid.AddValid;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <p>
@@ -64,6 +66,19 @@ public class PmsAttrGroup implements Serializable {
      */
     @Min(value = 0, message = "categoryId必须为合法数字", groups = {AddValid.class, UpdateValid.class})
     private Long catelogId;
+
+    public List<Long> getAttrGroupPath() {
+        return attrGroupPath;
+    }
+
+    public void setAttrGroupPath(List<Long> attrGroupPath) {
+        this.attrGroupPath = attrGroupPath;
+    }
+
+    @TableField(exist = false)
+    private List<Long> attrGroupPath;
+
+
 
     public Long getAttrGroupId() {
         return attrGroupId;

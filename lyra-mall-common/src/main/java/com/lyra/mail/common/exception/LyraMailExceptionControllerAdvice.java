@@ -27,4 +27,9 @@ public class LyraMailExceptionControllerAdvice {
 
         return new Result(ResponseStatusEnum.CHECK_FILED.getCode(), ResponseStatusEnum.CHECK_FILED.getMessage(), false, errorMap);
     }
+
+    @ExceptionHandler(LyraMailException.class)
+    public Result lyraMailException(LyraMailException e) {
+        return new Result(ResponseStatusEnum.FAILED.getCode(), ResponseStatusEnum.FAILED.getMessage(), false, e.getMessage());
+    }
 }

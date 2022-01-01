@@ -18,4 +18,6 @@ public interface IPmsCategoryService extends IService<PmsCategory> {
     List<PmsCategory> categoryListByTree();
 
     void logicDeleteByIds(List<Long> categoryIds);
+
+    void updateDetails(PmsCategory pmsCategory);
 }

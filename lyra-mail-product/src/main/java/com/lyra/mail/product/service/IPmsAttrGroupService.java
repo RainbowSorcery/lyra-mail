@@ -13,4 +13,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IPmsAttrGroupService extends IService<PmsAttrGroup> {
 
+    PmsAttrGroup getGroupById(Long attrGroupId);
+
 }

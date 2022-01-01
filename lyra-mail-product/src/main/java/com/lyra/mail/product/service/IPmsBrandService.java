@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IPmsBrandService extends IService<PmsBrand> {
 
+    void updateDetails(PmsBrand brand);
 }

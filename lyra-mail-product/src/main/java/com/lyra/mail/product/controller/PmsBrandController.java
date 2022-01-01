@@ -10,6 +10,7 @@ import com.lyra.mail.common.valid.UpdateValid;
 import com.lyra.mail.product.entity.PmsBrand;
 import com.lyra.mail.product.entity.PmsCategory;
 import com.lyra.mail.product.service.IPmsBrandService;
+import jdk.jfr.Category;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -41,7 +42,9 @@ public class PmsBrandController {
 
     @PostMapping("/update")
     public Result update(@RequestBody @Validated(value = {UpdateValid.class}) PmsBrand brand) {
-        brandService.updateById(brand);
+//        brandService.updateById(brand);
+
+        brandService.updateDetails(brand);
 
         return Result.ok();
     }

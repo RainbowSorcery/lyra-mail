@@ -2,9 +2,13 @@ package com.lyra.mail.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lyra.mail.product.entity.PmsCategory;
+import com.lyra.mail.product.entity.PmsCategoryBranRelation;
+import com.lyra.mail.product.mapper.PmsCategoryBranRelationMapper;
 import com.lyra.mail.product.mapper.PmsCategoryMapper;
 import com.lyra.mail.product.service.IPmsCategoryService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lyra.mail.product.service.PmsCategoryBranRelationService;
+import com.mysql.cj.util.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +29,9 @@ import java.util.stream.Collectors;
 public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryMapper, PmsCategory> implements IPmsCategoryService {
     @Autowired
     private PmsCategoryMapper categoryMapper;
+
+    @Autowired
+    private PmsCategoryBranRelationService categoryBranRelationService;
 
     @Override
     public List<PmsCategory> categoryListByTree() {
@@ -61,6 +68,16 @@ public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryMapper, PmsCa
         categoryMapper.deleteBatchIds(categoryIds);
 
 //        categoryMapper.deleteBatchIds(categoryIds);
+    }
+
+    @Override
+    public void updateDetails(PmsCategory pmsCategory) {
+        // todo 要进行更新操作时 中间表的冗余字段也要进行更新
+        categoryMapper.updateById(pmsCategory);
+
+        if (!StringUtils.isNullOrEmpty(pmsCategory.getName())) {
+            categoryBranRelationService.updateBrandName(pmsCategory.getCatId(), pmsCategory.getName());
+        }
     }
 
 

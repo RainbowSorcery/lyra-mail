@@ -68,7 +68,8 @@ public class PmsCategoryController {
 
     @PostMapping("/update")
     public Result update(@RequestBody PmsCategory pmsCategory) {
-        categoryService.updateById(pmsCategory);
+//        categoryService.updateById(pmsCategory);
+        categoryService.updateDetails(pmsCategory);
 
         return Result.ok();
     }

@@ -77,4 +77,22 @@ public class PmsAttrGroupController {
 
         return Result.ok();
     }
+
+    @GetMapping("/findAttrGroupById")
+    public Result FindAttrGroupById(Long attrGroupId) {
+        if (attrGroupId == null) {
+            return Result.error();
+        }
+
+        PmsAttrGroup attrGroup = attrGroupService.getGroupById(attrGroupId);
+
+        return Result.ok(attrGroup);
+    }
+
+    @PostMapping("/updateAttrGroupById")
+    public Result updateAttrGroupById(@RequestBody PmsAttrGroup pmsAttrGroup) {
+        attrGroupService.updateById(pmsAttrGroup);
+
+        return Result.ok();
+    }
 }
