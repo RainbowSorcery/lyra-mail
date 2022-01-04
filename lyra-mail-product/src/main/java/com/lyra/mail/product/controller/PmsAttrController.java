@@ -48,4 +48,26 @@ public class PmsAttrController {
 
         return Result.ok(baseListVOIPage);
     }
+
+    @GetMapping("/info/{attrId}")
+    public Result info(@PathVariable Long attrId) {
+        if (attrId == null) {
+            return Result.error();
+        }
+
+        BaseListVO baseListVO = attrService.info(attrId);
+
+        return Result.ok(baseListVO);
+    }
+
+    @PostMapping("/update")
+    public Result update(@RequestBody BaseListVO baseListVO) {
+        if (baseListVO == null) {
+            return Result.error();
+        }
+
+        attrService.updateAttr(baseListVO);
+
+        return Result.ok();
+    }
 }

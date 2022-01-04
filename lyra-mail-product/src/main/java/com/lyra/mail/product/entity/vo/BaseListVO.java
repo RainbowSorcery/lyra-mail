@@ -3,6 +3,8 @@ package com.lyra.mail.product.entity.vo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 
+import java.util.List;
+
 public class BaseListVO {
     /**
      * 属性id
@@ -57,6 +59,16 @@ public class BaseListVO {
 
     private String categoryName;
     private String attrGroupName;
+
+    private List<Long> categoryIdPathList;
+
+    public List<Long> getCategoryIdPathList() {
+        return categoryIdPathList;
+    }
+
+    public void setCategoryIdPathList(List<Long> categoryIdPathList) {
+        this.categoryIdPathList = categoryIdPathList;
+    }
 
     public String getCategoryName() {
         return categoryName;

@@ -21,4 +21,8 @@ public interface IPmsAttrService extends IService<PmsAttr> {
     void saveAttrVo(PmsAttrVO attrVO);
 
     IPage<BaseListVO> baseList(Long categoryId, Integer pageSize, Integer current, String keyword);
+
+    BaseListVO info(Long attrId);
+
+    void updateAttr(BaseListVO baseListVO);
 }
