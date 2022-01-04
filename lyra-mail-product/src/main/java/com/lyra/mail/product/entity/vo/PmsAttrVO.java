@@ -1,23 +1,9 @@
-package com.lyra.mail.product.entity;
+package com.lyra.mail.product.entity.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
 
-/**
- * <p>
- * 商品属性
- * </p>
- *
- * @author BackgroundPony
- * @since 2021-10-24
- */
-@TableName("pms_attr")
-public class PmsAttr implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+public class PmsAttrVO {
     /**
      * 属性id
      */
@@ -49,12 +35,13 @@ public class PmsAttr implements Serializable {
      */
     private Integer attrType;
 
-    private Integer valueType;
-
     /**
      * 启用状态[0 - 禁用，1 - 启用]
      */
     private Long enable;
+
+
+    private Integer valueType;
 
     /**
      * 所属分类
@@ -65,6 +52,16 @@ public class PmsAttr implements Serializable {
      * 快速展示【是否展示在介绍上；0-否 1-是】，在sku中仍然可以调整
      */
     private Integer showDesc;
+
+    private Long attrGroupId;
+
+    public Long getAttrGroupId() {
+        return attrGroupId;
+    }
+
+    public void setAttrGroupId(Long attrGroupId) {
+        this.attrGroupId = attrGroupId;
+    }
 
     public Long getAttrId() {
         return attrId;
@@ -115,6 +112,15 @@ public class PmsAttr implements Serializable {
     public void setEnable(Long enable) {
         this.enable = enable;
     }
+
+    public Integer getValueType() {
+        return valueType;
+    }
+
+    public void setValueType(Integer valueType) {
+        this.valueType = valueType;
+    }
+
     public Long getCatelogId() {
         return catelogId;
     }
@@ -130,26 +136,18 @@ public class PmsAttr implements Serializable {
         this.showDesc = showDesc;
     }
 
-    public Integer getValueType() {
-        return valueType;
-    }
-
-    public void setValueType(Integer valueType) {
-        this.valueType = valueType;
-    }
-
     @Override
     public String toString() {
         return "PmsAttr{" +
-            "attrId=" + attrId +
-            ", attrName=" + attrName +
-            ", searchType=" + searchType +
-            ", icon=" + icon +
-            ", valueSelect=" + valueSelect +
-            ", attrType=" + attrType +
-            ", enable=" + enable +
-            ", catelogId=" + catelogId +
-            ", showDesc=" + showDesc +
-        "}";
+                "attrId=" + attrId +
+                ", attrName=" + attrName +
+                ", searchType=" + searchType +
+                ", icon=" + icon +
+                ", valueSelect=" + valueSelect +
+                ", attrType=" + attrType +
+                ", enable=" + enable +
+                ", catelogId=" + catelogId +
+                ", showDesc=" + showDesc +
+                "}";
     }
 }

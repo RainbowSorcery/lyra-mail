@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 
+import java.util.List;
+
 /**
  * <p>
  * 属性分组 前端控制器
@@ -26,11 +28,23 @@ public class PmsAttrGroupController {
     @Autowired
     private IPmsAttrGroupService attrGroupService;
 
+    @GetMapping("/findCategoryIdByList/{categoryId}")
+    public Result findList(@PathVariable Long categoryId) {
+        if (categoryId == null) {
+            return Result.error();
+        }
+
+        List<PmsAttrGroup> list = attrGroupService.list();
+        return Result.ok(list);
+    }
+
     @GetMapping("/list/{categoryId}")
     public Result listPageByCategoryId(@PathVariable Long categoryId, Integer current, Integer pageSize) {
         if (categoryId == null) {
             categoryId = 0L;
         }
+
+
 
         if (current == null) {
             current = 0;
@@ -53,6 +67,7 @@ public class PmsAttrGroupController {
         if (keyWord == null) {
             keyWord = "";
         }
+
         IPage<PmsAttrGroup> pmsAttrGroupIPage = new Page<>(current, pageSize);
         QueryWrapper<PmsAttrGroup> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("catelog_id", categoryId);

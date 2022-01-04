@@ -1,7 +1,12 @@
 package com.lyra.mail.product.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lyra.mail.product.entity.PmsAttr;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lyra.mail.product.entity.vo.BaseListVO;
+import com.lyra.mail.product.entity.vo.PmsAttrVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +18,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IPmsAttrService extends IService<PmsAttr> {
 
+    void saveAttrVo(PmsAttrVO attrVO);
+
+    IPage<BaseListVO> baseList(Long categoryId, Integer pageSize, Integer current, String keyword);
 }

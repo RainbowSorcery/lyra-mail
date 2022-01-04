@@ -1,23 +1,9 @@
-package com.lyra.mail.product.entity;
+package com.lyra.mail.product.entity.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
 
-/**
- * <p>
- * 商品属性
- * </p>
- *
- * @author BackgroundPony
- * @since 2021-10-24
- */
-@TableName("pms_attr")
-public class PmsAttr implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+public class BaseListVO {
     /**
      * 属性id
      */
@@ -49,12 +35,13 @@ public class PmsAttr implements Serializable {
      */
     private Integer attrType;
 
-    private Integer valueType;
-
     /**
      * 启用状态[0 - 禁用，1 - 启用]
      */
     private Long enable;
+
+
+    private Integer valueType;
 
     /**
      * 所属分类
@@ -66,6 +53,27 @@ public class PmsAttr implements Serializable {
      */
     private Integer showDesc;
 
+    private Long attrGroupId;
+
+    private String categoryName;
+    private String attrGroupName;
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getAttrGroupName() {
+        return attrGroupName;
+    }
+
+    public void setAttrGroupName(String attrGroupName) {
+        this.attrGroupName = attrGroupName;
+    }
+
     public Long getAttrId() {
         return attrId;
     }
@@ -73,6 +81,7 @@ public class PmsAttr implements Serializable {
     public void setAttrId(Long attrId) {
         this.attrId = attrId;
     }
+
     public String getAttrName() {
         return attrName;
     }
@@ -80,6 +89,7 @@ public class PmsAttr implements Serializable {
     public void setAttrName(String attrName) {
         this.attrName = attrName;
     }
+
     public Integer getSearchType() {
         return searchType;
     }
@@ -87,6 +97,7 @@ public class PmsAttr implements Serializable {
     public void setSearchType(Integer searchType) {
         this.searchType = searchType;
     }
+
     public String getIcon() {
         return icon;
     }
@@ -94,6 +105,7 @@ public class PmsAttr implements Serializable {
     public void setIcon(String icon) {
         this.icon = icon;
     }
+
     public String getValueSelect() {
         return valueSelect;
     }
@@ -101,6 +113,7 @@ public class PmsAttr implements Serializable {
     public void setValueSelect(String valueSelect) {
         this.valueSelect = valueSelect;
     }
+
     public Integer getAttrType() {
         return attrType;
     }
@@ -108,26 +121,13 @@ public class PmsAttr implements Serializable {
     public void setAttrType(Integer attrType) {
         this.attrType = attrType;
     }
+
     public Long getEnable() {
         return enable;
     }
 
     public void setEnable(Long enable) {
         this.enable = enable;
-    }
-    public Long getCatelogId() {
-        return catelogId;
-    }
-
-    public void setCatelogId(Long catelogId) {
-        this.catelogId = catelogId;
-    }
-    public Integer getShowDesc() {
-        return showDesc;
-    }
-
-    public void setShowDesc(Integer showDesc) {
-        this.showDesc = showDesc;
     }
 
     public Integer getValueType() {
@@ -138,18 +138,27 @@ public class PmsAttr implements Serializable {
         this.valueType = valueType;
     }
 
-    @Override
-    public String toString() {
-        return "PmsAttr{" +
-            "attrId=" + attrId +
-            ", attrName=" + attrName +
-            ", searchType=" + searchType +
-            ", icon=" + icon +
-            ", valueSelect=" + valueSelect +
-            ", attrType=" + attrType +
-            ", enable=" + enable +
-            ", catelogId=" + catelogId +
-            ", showDesc=" + showDesc +
-        "}";
+    public Long getCatelogId() {
+        return catelogId;
+    }
+
+    public void setCatelogId(Long catelogId) {
+        this.catelogId = catelogId;
+    }
+
+    public Integer getShowDesc() {
+        return showDesc;
+    }
+
+    public void setShowDesc(Integer showDesc) {
+        this.showDesc = showDesc;
+    }
+
+    public Long getAttrGroupId() {
+        return attrGroupId;
+    }
+
+    public void setAttrGroupId(Long attrGroupId) {
+        this.attrGroupId = attrGroupId;
     }
 }
