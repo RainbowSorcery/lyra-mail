@@ -6,8 +6,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.lyra.mail.product.entity.vo.BaseListVO;
 import com.lyra.mail.product.entity.vo.PmsAttrVO;
 
-import java.util.List;
-
 /**
  * <p>
  * 商品属性 服务类
@@ -20,7 +18,7 @@ public interface IPmsAttrService extends IService<PmsAttr> {
 
     void saveAttrVo(PmsAttrVO attrVO);
 
-    IPage<BaseListVO> baseList(Long categoryId, Integer pageSize, Integer current, String keyword);
+    IPage<BaseListVO> baseList(Long categoryId, Integer pageSize, Integer current, String keyword, String attrType);
 
     BaseListVO info(Long attrId);
 

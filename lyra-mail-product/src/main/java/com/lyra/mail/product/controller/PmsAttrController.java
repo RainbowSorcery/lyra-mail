@@ -34,8 +34,11 @@ public class PmsAttrController {
         return Result.ok();
     }
 
-    @GetMapping("/base/list/{categoryId}")
-    public Result baseList(@PathVariable Long categoryId, Integer pageSize, Integer current, String keyword) {
+    @GetMapping("/{attrType}/list/{categoryId}")
+    public Result baseList(@PathVariable Long categoryId, Integer pageSize, Integer current,
+                           String keyword, @PathVariable String attrType) {
+
+
         if (current == null) {
             current = 0;
         }
@@ -44,7 +47,7 @@ public class PmsAttrController {
             pageSize = 10;
         }
 
-        IPage<BaseListVO> baseListVOIPage = attrService.baseList(categoryId, pageSize, current, keyword);
+        IPage<BaseListVO> baseListVOIPage = attrService.baseList(categoryId, pageSize, current, keyword, attrType);
 
         return Result.ok(baseListVOIPage);
     }

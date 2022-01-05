@@ -3,6 +3,7 @@ package com.lyra.mail.product.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lyra.mail.common.enums.AttrType;
 import com.lyra.mail.product.entity.PmsAttr;
 import com.lyra.mail.product.entity.PmsAttrAttrgroupRelation;
 import com.lyra.mail.product.entity.PmsAttrGroup;
@@ -15,7 +16,6 @@ import com.lyra.mail.product.mapper.PmsAttrMapper;
 import com.lyra.mail.product.mapper.PmsCategoryMapper;
 import com.lyra.mail.product.service.IPmsAttrService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.mysql.cj.Query;
 import com.mysql.cj.util.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -63,8 +64,14 @@ public class PmsAttrServiceImpl extends ServiceImpl<PmsAttrMapper, PmsAttr> impl
     }
 
     @Override
-    public IPage<BaseListVO> baseList(Long categoryId, Integer pageSize, Integer current, String keyword) {
+    public IPage<BaseListVO> baseList(Long categoryId, Integer pageSize, Integer current, String keyword, String attrType) {
         QueryWrapper<PmsAttr> queryWrapper = new QueryWrapper<>();
+
+        if (Objects.equals(attrType, "sale")) {
+            queryWrapper.eq("attr_type", AttrType.saleType.getType());
+        }else {
+            queryWrapper.eq("attr_type", AttrType.baseType.getType());
+        }
 
         queryWrapper.eq("catelog_id", categoryId);
         if (!StringUtils.isNullOrEmpty(keyword)) {
