@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lyra.mail.common.result.Result;
+import com.lyra.mail.product.entity.PmsAttr;
 import com.lyra.mail.product.entity.PmsAttrGroup;
+import com.lyra.mail.product.entity.vo.AttrGroupRelationVO;
 import com.lyra.mail.product.service.IPmsAttrGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -107,6 +109,52 @@ public class PmsAttrGroupController {
     @PostMapping("/updateAttrGroupById")
     public Result updateAttrGroupById(@RequestBody PmsAttrGroup pmsAttrGroup) {
         attrGroupService.updateById(pmsAttrGroup);
+
+        return Result.ok();
+    }
+
+    @PostMapping("/remove/{attrGroupId}")
+    public Result remove(@PathVariable Long attrGroupId) {
+        attrGroupService.removeById(attrGroupId);
+
+        return Result.ok();
+    }
+
+    @GetMapping("/{attrGroupId}/attr/relation")
+    public Result attrRelation(@PathVariable Long attrGroupId) {
+        List<PmsAttr> attrs =  attrGroupService.categoryAttrList(attrGroupId);
+
+        return Result.ok(attrs);
+    }
+
+    @PostMapping("/attr/relation/delete")
+    public Result deleteAttrRelation(@RequestBody List<AttrGroupRelationVO> attrGroupRelationVOS) {
+        attrGroupService.removeAttrRelation(attrGroupRelationVOS);
+
+        return Result.ok();
+    }
+
+    @GetMapping("{attrGroupId}/noAttr/relation")
+    public Result noAttrRelation(@PathVariable Long attrGroupId, Integer pageSize, Integer current, String keyword) {
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+
+        if (current == null) {
+            current = 0;
+        }
+        IPage<PmsAttr> attrIPage = attrGroupService.noAttrRelation(attrGroupId, pageSize, current, keyword);
+
+        return Result.ok(attrIPage);
+    }
+
+    @PostMapping("/attr/relation")
+    public Result addAttrRelation(@RequestBody List<AttrGroupRelationVO> attrGroupRelationVO) {
+        if (attrGroupRelationVO == null || attrGroupRelationVO.size() <= 0) {
+            return Result.error();
+        }
+
+        attrGroupService.addAttrRelation(attrGroupRelationVO);
 
         return Result.ok();
     }

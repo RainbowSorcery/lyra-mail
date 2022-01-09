@@ -21,7 +21,7 @@ public class PmsAttr implements Serializable {
     /**
      * 属性id
      */
-    @TableId(value = "attr_id", type = IdType.AUTO)
+    @TableId(value = "attr_id", type = IdType.NONE)
     private Long attrId;
 
     /**
