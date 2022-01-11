@@ -28,6 +28,13 @@ spring:
             - Path=/third-party-service/**
           filters:
             - StripPrefix=1
+        - id: member-service
+          uri: lb://memeber-service
+          predicates:
+            - Path=/memeber-service/**
+          filters:
+            - StripPrefix=1
+
       globalcors:
         cors-configurations:
           '[/**]':

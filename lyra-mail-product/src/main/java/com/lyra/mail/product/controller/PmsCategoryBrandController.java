@@ -26,7 +26,7 @@ public class PmsCategoryBrandController {
         return Result.ok();
     }
 
-    @GetMapping("categoryBrandRelation/list")
+    @GetMapping("/categoryBrandRelation/list")
     public Result categoryBrandRelationList(Long brandId) {
         QueryWrapper<PmsCategoryBranRelation> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("brand_id", brandId);
@@ -40,6 +40,15 @@ public class PmsCategoryBrandController {
         pmsCategoryBranRelationService.removeById(id);
 
     return Result.ok();
+    }
+
+    @GetMapping("/brands/list")
+    public Result brandList(@RequestParam Long categoryId) {
+        QueryWrapper<PmsCategoryBranRelation> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("catelog_id", categoryId);
+        List<PmsCategoryBranRelation> list = pmsCategoryBranRelationService.list(queryWrapper);
+
+        return Result.ok(list);
     }
 
 }

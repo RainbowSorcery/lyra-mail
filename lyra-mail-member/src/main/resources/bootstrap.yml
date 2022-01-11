@@ -1,0 +1,18 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: memeber-service
+
+  cloud:
+    nacos:
+      config:
+        namespace: a39d246a-d086-4559-9bff-89189f6d205c
+        server-addr: 127.0.0.1:8848
+        file-extension: YAML
+        extension-configs:
+          - data-id: nacos-register.YAML
+            refresh: true
+          - data-id: member-data-srouce.YAML
+            refresh: true

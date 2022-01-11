@@ -16,7 +16,7 @@ public class GeneratorApplication {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/mail",  "root", "365373011");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/mail_ums", "root", "365373011");
 
             String sql = "show tables;";
             Statement statement = conn.createStatement();
@@ -24,22 +24,22 @@ public class GeneratorApplication {
 
             while (resultSet.next()) {
 
-                String tableName = resultSet.getString("Tables_in_mail");
+                String tableName = resultSet.getString("Tables_in_mail_ums");
 
                 if (!tableName.contains("qrtz")) {
 
-                    FastAutoGenerator.create("jdbc:mysql://127.0.0.1:3306/mail", "root", "365373011")
+                    FastAutoGenerator.create("jdbc:mysql://127.0.0.1:3306/mail_ums", "root", "365373011")
                             .globalConfig(builder -> {
                                 builder.author("lyra") // 设置作者
                                         .fileOverride() // 覆盖已生成文件
                                         .outputDir("/home/lyra/outPut"); // 指定输出目录
                             })
                             .packageConfig(builder -> {
-                                builder.parent("com.lyra") // 设置父包名 // 设置父包模块名
+                                builder.parent("com.lyra.ums") // 设置父包名 // 设置父包模块名
                                         .pathInfo(Collections.singletonMap(OutputFile.mapperXml, "/home/lyra/outPut/mapper")); // 设置mapperXml生成路径
                             })
                             .strategyConfig(builder -> {
-                                builder.addInclude("product"); // 设置需要生成的表名// 设置过滤表前缀
+                                builder.addInclude(tableName); // 设置需要生成的表名// 设置过滤表前缀
                             })
                             .templateEngine(new FreemarkerTemplateEngine()) // 使用Freemarker引擎模板，默认的是Velocity引擎模板
                             .execute();
