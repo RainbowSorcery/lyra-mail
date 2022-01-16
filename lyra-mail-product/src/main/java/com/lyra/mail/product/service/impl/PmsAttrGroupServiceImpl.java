@@ -8,6 +8,7 @@ import com.lyra.mail.product.entity.PmsAttrAttrgroupRelation;
 import com.lyra.mail.product.entity.PmsAttrGroup;
 import com.lyra.mail.product.entity.PmsCategory;
 import com.lyra.mail.product.entity.vo.AttrGroupRelationVO;
+import com.lyra.mail.product.entity.vo.AttrGroupWithAttr;
 import com.lyra.mail.product.mapper.PmsAttrAttrgroupRelationMapper;
 import com.lyra.mail.product.mapper.PmsAttrGroupMapper;
 import com.lyra.mail.product.mapper.PmsAttrMapper;
@@ -39,7 +40,6 @@ public class PmsAttrGroupServiceImpl extends ServiceImpl<PmsAttrGroupMapper, Pms
     @Autowired
     private PmsAttrGroupMapper attrGroupMapper;
 
-    // todo 应该远程调用 之后再修改
     @Autowired
     private PmsCategoryMapper pmsCategoryMapper;
 
@@ -154,5 +154,23 @@ public class PmsAttrGroupServiceImpl extends ServiceImpl<PmsAttrGroupMapper, Pms
         attrAttrgroupRelations.forEach((attrAttrgroupRelation) -> {
             attrAttrgroupRelationMapper.insert(attrAttrgroupRelation);
         });
+    }
+
+    @Override
+    public List<AttrGroupWithAttr> getAttrByAttrCategory(String categoryId) {
+        List<PmsAttrGroup> groups = attrGroupMapper.selectList(new QueryWrapper<PmsAttrGroup>().eq("catelog_id", categoryId));
+
+        List<AttrGroupWithAttr> attrGroupWithAttrs = groups.stream().map((attrGroup) -> {
+            AttrGroupWithAttr attrGroupWithAttr = new AttrGroupWithAttr();
+            BeanUtils.copyProperties(attrGroup, attrGroupWithAttr);
+
+            List<PmsAttr> pmsAttrs = this.categoryAttrList(attrGroup.getAttrGroupId());
+            attrGroupWithAttr.setAttrs(pmsAttrs);
+
+            return attrGroupWithAttr;
+        }).collect(Collectors.toList());
+
+
+        return attrGroupWithAttrs;
     }
 }

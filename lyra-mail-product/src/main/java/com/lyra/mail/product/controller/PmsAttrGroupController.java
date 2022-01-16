@@ -8,6 +8,7 @@ import com.lyra.mail.common.result.Result;
 import com.lyra.mail.product.entity.PmsAttr;
 import com.lyra.mail.product.entity.PmsAttrGroup;
 import com.lyra.mail.product.entity.vo.AttrGroupRelationVO;
+import com.lyra.mail.product.entity.vo.AttrGroupWithAttr;
 import com.lyra.mail.product.service.IPmsAttrGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -157,5 +158,12 @@ public class PmsAttrGroupController {
         attrGroupService.addAttrRelation(attrGroupRelationVO);
 
         return Result.ok();
+    }
+
+    @GetMapping("/{catelogId}/withattr")
+    public Result getAttrByAttrCategory(@PathVariable("catelogId") String categoryId) {
+        List<AttrGroupWithAttr> attrByAttrCategory = attrGroupService.getAttrByAttrCategory(categoryId);
+
+        return Result.ok(attrByAttrCategory);
     }
 }

@@ -8,6 +8,9 @@ public class Result {
     private Boolean success;
     private Object data;
 
+    public Result() {
+    }
+
     public static Result ok(Map<String, Object> data) {
         return new Result(ResponseStatusEnum.SUCCESS.getCode(), ResponseStatusEnum.SUCCESS.getMessage(),true, data);
     }

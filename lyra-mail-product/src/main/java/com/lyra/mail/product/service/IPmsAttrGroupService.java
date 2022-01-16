@@ -5,6 +5,7 @@ import com.lyra.mail.product.entity.PmsAttr;
 import com.lyra.mail.product.entity.PmsAttrGroup;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lyra.mail.product.entity.vo.AttrGroupRelationVO;
+import com.lyra.mail.product.entity.vo.AttrGroupWithAttr;
 
 import java.util.List;
 
@@ -27,4 +28,6 @@ public interface IPmsAttrGroupService extends IService<PmsAttrGroup> {
     IPage<PmsAttr> noAttrRelation(Long attrGroupId, Integer pageSize, Integer current, String keyword);
 
     void addAttrRelation(List<AttrGroupRelationVO> attrGroupRelationVO);
+
+    List<AttrGroupWithAttr> getAttrByAttrCategory(String categoryId);
 }

@@ -28,7 +28,7 @@ public class UmsMemberLevelController {
     @Autowired
     private IUmsMemberLevelService memberLevelService;
 
-    @GetMapping("/list")
+    @GetMapping("/pageList")
     public Result list(Integer current, Integer pageSize) {
 
         if (current == null) {
@@ -69,5 +69,13 @@ public class UmsMemberLevelController {
         memberLevelService.removeByIds(memberIds);
 
         return Result.ok();
+    }
+
+    @GetMapping("/list")
+    public Result list() {
+        List<UmsMemberLevel> list = memberLevelService.list();
+
+        return Result.ok(list);
+
     }
 }

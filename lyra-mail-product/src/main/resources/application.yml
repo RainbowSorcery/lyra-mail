@@ -32,4 +32,5 @@ server:
 logging:
   level:
     com.lyra.mail.product.mapper: debug
+    com.lyra.mail.product.feign: debug
 
