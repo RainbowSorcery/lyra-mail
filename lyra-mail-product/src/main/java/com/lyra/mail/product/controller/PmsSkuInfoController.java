@@ -7,6 +7,7 @@ import com.lyra.mail.product.entity.PmsSkuInfo;
 import com.lyra.mail.product.service.IPmsSkuInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.stereotype.Controller;
@@ -42,4 +43,11 @@ public class PmsSkuInfoController {
         return Result.ok(skuInfoIPage);
     }
 
+
+    @GetMapping("/info/{skuId}")
+    public Result skuInfo(@PathVariable Long skuId) {
+        PmsSkuInfo skuInfo = skuInfoService.getById(skuId);
+
+        return Result.ok(skuInfo);
+    }
 }

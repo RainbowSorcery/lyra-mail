@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lyra.mail.ware.mapper.WmsWareSkuMapper">
+
+    <insert id="insertStock">
+        INSERT INTO mail_wms.wms_ware_sku
+            (sku_id, ware_id, stock)
+        VALUES(#{skuId}, #{wareId}, #{skuNum})
+    </insert>
+    <update id="updateSock">
+        UPDATE mail_wms.wms_ware_sku
+        SET sku_id=#{skuId}, ware_id=#{wareId}, stock=stock + #{skuNum}
+
+    </update>
+</mapper>

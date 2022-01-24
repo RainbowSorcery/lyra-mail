@@ -1,8 +1,8 @@
 server:
-  port: 8000
+  port: 7000
 spring:
   application:
-    name: admin-service
+    name: ware-service
   cloud:
     nacos:
       server-addr: 127.0.0.1:8848
@@ -12,6 +12,8 @@ spring:
         shared-configs:
           - data-id: nacos-register.YAML
             refresh: true
-          - data-id: admin-data-srouce.YAML
+          - data-id: ware-data-srouce.YAML
             refresh: true
 
+  jackson:
+    date-format: yyyy-MM-dd
