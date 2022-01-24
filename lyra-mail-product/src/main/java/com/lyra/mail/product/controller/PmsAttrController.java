@@ -3,9 +3,11 @@ package com.lyra.mail.product.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lyra.mail.common.result.Result;
+import com.lyra.mail.product.entity.PmsProductAttrValue;
 import com.lyra.mail.product.entity.vo.BaseListVO;
 import com.lyra.mail.product.entity.vo.PmsAttrVO;
 import com.lyra.mail.product.service.IPmsAttrService;
+import com.lyra.mail.product.service.IPmsProductAttrValueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +28,9 @@ import java.util.List;
 public class PmsAttrController {
     @Autowired
     private IPmsAttrService attrService;
+
+    @Autowired
+    private IPmsProductAttrValueService productAttrValueService;
 
     @PostMapping("/save")
     public Result save(@RequestBody PmsAttrVO attrVO) {
@@ -70,6 +75,20 @@ public class PmsAttrController {
         }
 
         attrService.updateAttr(baseListVO);
+
+        return Result.ok();
+    }
+
+    @GetMapping("/base/listForSpu/{spuId}")
+    public Result listForSpu(@PathVariable Long spuId) {
+        List<PmsProductAttrValue> attrValues = productAttrValueService.attrValueList(spuId);
+
+        return Result.ok(attrValues);
+    }
+
+    @PostMapping("/base/update/{spuId}")
+    public Result update(@PathVariable Long spuId, @RequestBody List<PmsProductAttrValue> attrValues) {
+        productAttrValueService.updateAttrs(spuId, attrValues);
 
         return Result.ok();
     }
