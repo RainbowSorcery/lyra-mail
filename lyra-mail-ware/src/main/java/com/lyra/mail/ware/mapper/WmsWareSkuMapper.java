@@ -17,4 +17,6 @@ public interface WmsWareSkuMapper extends BaseMapper<WmsWareSku> {
     void insertStock(@Param("skuId") Long skuId, @Param("wareId") Long wareId, @Param("skuNum") Integer skuNum);
 
     void updateSock(@Param("skuId") Long skuId, @Param("wareId") Long wareId, @Param("skuNum") Integer skuNum);
+
+    Long getSkuStockCount(Long skuId);
 }

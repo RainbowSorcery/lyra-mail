@@ -12,4 +12,7 @@
         SET sku_id=#{skuId}, ware_id=#{wareId}, stock=stock + #{skuNum}
 
     </update>
+    <select id="getSkuStockCount" resultType="java.lang.Long">
+        SELECT SUM(stock) - SUM(stock_locked)  FROM mail_wms.wms_ware_sku wws  WHERE sku_id  = #{skuId}
+    </select>
 </mapper>

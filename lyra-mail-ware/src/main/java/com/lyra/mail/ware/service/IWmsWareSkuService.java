@@ -1,8 +1,11 @@
 package com.lyra.mail.ware.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.lyra.mail.common.to.WareSkuHasStockTO;
 import com.lyra.mail.ware.entity.WmsWareSku;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +20,6 @@ public interface IWmsWareSkuService extends IService<WmsWareSku> {
     IPage<WmsWareSku> findWareSkuList(Integer current, Integer pageSize, Long skuId, Long wareId);
 
     void addStock(Long skuId, Long wareId, Integer skuNum);
+
+    List<WareSkuHasStockTO> skuIdsHasStock(List<Long> skuIds);
 }

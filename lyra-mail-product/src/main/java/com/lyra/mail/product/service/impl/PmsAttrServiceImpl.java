@@ -168,6 +168,11 @@ public class PmsAttrServiceImpl extends ServiceImpl<PmsAttrMapper, PmsAttr> impl
         attrAttrgroupRelationMapper.update(attrAttrgroupRelation, queryWrapper);
     }
 
+    @Override
+    public List<Long> getSearchableAttrIds(List<Long> attrsIdList) {
+        return attrMapper.searchableAttrIds(attrsIdList);
+    }
+
     private void getCategoryPath(List<Long> categoryPath, PmsCategory category) {
         if (category != null ) {
             categoryPath.add(category.getCatId());

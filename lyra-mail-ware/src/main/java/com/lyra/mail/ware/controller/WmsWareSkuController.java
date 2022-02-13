@@ -3,6 +3,7 @@ package com.lyra.mail.ware.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lyra.mail.common.result.Result;
+import com.lyra.mail.common.to.WareSkuHasStockTO;
 import com.lyra.mail.ware.entity.WmsWareSku;
 import com.lyra.mail.ware.service.IWmsWareSkuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,5 +68,12 @@ public class WmsWareSkuController {
         wmsWareSkuService.removeByIds(ids);
 
         return Result.ok();
+    }
+
+    @PostMapping("/hasStock")
+    public Result hasStock(@RequestBody List<Long> skuIds) {
+        List<WareSkuHasStockTO> wareSkuHasStockTOS = wmsWareSkuService.skuIdsHasStock(skuIds);
+
+        return Result.ok(wareSkuHasStockTOS);
     }
 }

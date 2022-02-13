@@ -48,4 +48,11 @@ public class PmsSpuInfoController {
 
         return Result.ok(pmsSpuInfoPage);
     }
+
+    @PostMapping("/{spuId}/up")
+    public Result upProduct(@PathVariable Long spuId) {
+        spuInfoService.upProduct(spuId);
+
+        return Result.ok();
+    }
 }

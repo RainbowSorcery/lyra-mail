@@ -3,11 +3,17 @@ package com.lyra.mail.product.service.impl;
 import com.alibaba.nacos.common.utils.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lyra.mail.common.enums.ProductConstruct;
+import com.lyra.mail.common.result.Result;
 import com.lyra.mail.common.to.BoundsTO;
+import com.lyra.mail.common.to.SkuESEntity;
 import com.lyra.mail.common.to.SkuReductionTO;
+import com.lyra.mail.common.to.WareSkuHasStockTO;
 import com.lyra.mail.product.entity.*;
 import com.lyra.mail.product.entity.vo.*;
 import com.lyra.mail.product.feign.CouponFeignService;
+import com.lyra.mail.product.feign.ElasticSearchSaveFeignService;
+import com.lyra.mail.product.feign.WareFeignService;
 import com.lyra.mail.product.mapper.PmsSpuInfoMapper;
 import com.lyra.mail.product.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -17,7 +23,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -56,6 +65,18 @@ public class PmsSpuInfoServiceImpl extends ServiceImpl<PmsSpuInfoMapper, PmsSpuI
 
     @Autowired
     private CouponFeignService couponFeignService;
+
+    @Autowired
+    private IPmsBrandService brandService;
+
+    @Autowired
+    private IPmsCategoryService categoryService;
+
+    @Autowired
+    private WareFeignService wareFeignService;
+
+    @Autowired
+    private ElasticSearchSaveFeignService elasticSearchSaveFeignService;
 
     @Override
     @Transactional
@@ -198,5 +219,99 @@ public class PmsSpuInfoServiceImpl extends ServiceImpl<PmsSpuInfoMapper, PmsSpuI
         }
 
         return spuInfoMapper.selectPage(new Page<>(current, pageSize), queryWrapper);
+    }
+
+    @Override
+    public void upProduct(Long spuId) {
+        List<PmsSkuInfo> skuInfoList = this.getSkuInfoById(spuId);
+        List<Long> skuIdList = skuInfoList.stream().map(PmsSkuInfo::getSkuId).collect(Collectors.toList());
+
+        // 查询attrs
+        List<PmsProductAttrValue> attrValues = pmsProductAttrValueService.attrValueList(spuId);
+        // 过滤出可以被检索出的属性id
+        List<Long> attrsIdList = attrValues.stream().map(PmsProductAttrValue::getAttrId).collect(Collectors.toList());
+        List<Long> searchableAttrIds = attrService.getSearchableAttrIds(attrsIdList);
+
+        List<SkuESEntity.Attr> skuEsEntityAttrs = attrValues.stream().filter((attr) -> {
+            return searchableAttrIds.contains(attr.getAttrId());
+        }).map((attr) -> {
+            SkuESEntity.Attr skuEsEntityAttr = new SkuESEntity.Attr();
+            BeanUtils.copyProperties(attr, skuEsEntityAttr);
+            return skuEsEntityAttr;
+        }).collect(Collectors.toList());
+
+
+        // 远程调用库存服务 hasStock
+        Map<Long, Boolean> wareSkuHasStockMap = null;
+        try {
+            Result result = wareFeignService.hasStock(skuIdList);
+            List<Map<String, Object>> wareSkuHasStockTOMaps = (List<Map<String, Object>>) result.getData();
+
+            wareSkuHasStockMap = new HashMap<>();
+            Map<Long, Boolean> finalWareSkuHasStockMap1 = wareSkuHasStockMap;
+            wareSkuHasStockTOMaps.forEach((map) -> {
+                finalWareSkuHasStockMap1.put(Long.valueOf(String.valueOf(map.get("skuId"))), (Boolean) map.get("hasStock"));
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        Map<Long, Boolean> finalWareSkuHasStockMap = wareSkuHasStockMap;
+        List<SkuESEntity> skuESEntityList = skuInfoList.stream().map((skuInfo) -> {
+            SkuESEntity skuESEntity = new SkuESEntity();
+
+            BeanUtils.copyProperties(skuInfo, skuESEntity);
+            skuESEntity.setSkuPrice(skuInfo.getPrice());
+            skuESEntity.setSkuImg(skuInfo.getSkuDefaultImg());
+
+            // todo 热度服务hotScore 先初始化为0 之后再拓展
+            skuESEntity.setHotScore(0L);
+
+            Long brandId = skuInfo.getBrandId();
+
+            PmsBrand brand = null;
+            if (brandId != null) {
+                brand = brandService.getById(brandId);
+            }
+
+            if (brand != null) {
+                skuESEntity.setBrandImg(brand.getLogo());
+                skuESEntity.setBrandName(brand.getName());
+            }
+
+
+            PmsCategory category = categoryService.getById(skuInfo.getCatalogId());
+            skuESEntity.setCatalogName(category.getName());
+
+            // 设置检索属性
+            skuESEntity.setAttrs(skuEsEntityAttrs);
+
+            if (finalWareSkuHasStockMap == null && finalWareSkuHasStockMap.size() <= 0) {
+                skuESEntity.setHasStock(false);
+            } else {
+                skuESEntity.setHasStock(finalWareSkuHasStockMap.get(skuInfo.getSkuId()));
+            }
+
+            return skuESEntity;
+        }).collect(Collectors.toList());
+
+        // 进行上架操作
+        Result result = elasticSearchSaveFeignService.saveProduct(skuESEntityList);
+        if (result.getSuccess()) {
+            // 如果上架成功 啧修改spu 状态为上架
+            spuInfoMapper.changeSpuStatusUp(spuId, ProductConstruct.SpuStatus.UP_STATUS.getCode());
+        } else {
+            // todo 接口反复调用幂等性问题 上架失败重试操作
+        }
+
+    }
+
+    protected List<PmsSkuInfo> getSkuInfoById(Long spuId) {
+        QueryWrapper<PmsSkuInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("spu_id", spuId);
+
+        return skuInfoService.getBaseMapper().selectList(queryWrapper);
     }
 }

@@ -2,4 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lyra.mail.product.mapper.PmsAttrMapper">
 
+    <select id="searchableAttrIds" resultType="java.lang.Long">
+        SELECT attr_id  FROM mail_pms.pms_attr pa WHERE pa.attr_id IN
+         <foreach collection="attrsIdList" item="id" open="(" close=")" separator="," >
+             #{id}
+         </foreach>
+         AND search_type  = 1
+    </select>
 </mapper>

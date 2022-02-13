@@ -20,4 +20,6 @@ public interface IPmsSpuInfoService extends IService<PmsSpuInfo> {
     void saveSpuInfo(PmsSpuInfo spuInfo);
 
     Page<PmsSpuInfo> SpuInfoListPage(Integer current, Integer pageSize, String key, Long catelogId, Long brandId, Integer status);
+
+    void upProduct(Long spuId);
 }

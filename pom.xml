@@ -25,6 +25,7 @@
         <module>lyra-mail-gateway</module>
         <module>lyra-mail-admin</module>
         <module>lyra-mail-third-party</module>
+        <module>lyra-mail-search</module>
     </modules>
 
     <properties>

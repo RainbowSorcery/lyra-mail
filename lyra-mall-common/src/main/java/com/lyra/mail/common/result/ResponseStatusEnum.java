@@ -3,7 +3,9 @@ package com.lyra.mail.common.result;
 public enum ResponseStatusEnum {
     SUCCESS(200, "成功!"),
     FAILED(500, "失败!"),
-    CHECK_FILED(501, "参数校验失败");
+    CHECK_FILED(501, "参数校验失败"),
+    PRODUCT_UP_ERROR(502, "商品上架失败");
+
     private Integer code;
     private String message;
 

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lyra.mail.common.result.ResponseStatusEnum;
 import com.lyra.mail.common.result.Result;
 import com.lyra.mail.common.to.SkuInfoTO;
+import com.lyra.mail.common.to.WareSkuHasStockTO;
 import com.lyra.mail.ware.entity.WmsWareSku;
 import com.lyra.mail.ware.feign.SkuFeign;
 import com.lyra.mail.ware.mapper.WmsWareSkuMapper;
@@ -20,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -76,5 +78,22 @@ public class WmsWareSkuServiceImpl extends ServiceImpl<WmsWareSkuMapper, WmsWare
         } else {
             wmsWareSkuMapper.updateSock(skuId, wareId, skuNum);
         }
+    }
+
+    @Override
+    public List<WareSkuHasStockTO> skuIdsHasStock(List<Long> skuIds) {
+        return skuIds.stream().map((skuId) -> {
+            WareSkuHasStockTO wareSkuHasStockTO = new WareSkuHasStockTO();
+            Long skuCount = wmsWareSkuMapper.getSkuStockCount(skuId);
+            wareSkuHasStockTO.setSkuId(skuId);
+            // 如果搜不到代表没库存
+            if (skuCount == null) {
+                wareSkuHasStockTO.setHasStock(false);
+            } else {
+                wareSkuHasStockTO.setHasStock(skuCount > 0);
+            }
+
+            return wareSkuHasStockTO;
+        }).collect(Collectors.toList());
     }
 }
