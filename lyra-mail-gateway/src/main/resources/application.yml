@@ -46,6 +46,11 @@ spring:
             - Path=/search-service/**
           filters:
             - StripPrefix=1
+        - id: guli-product-host-router
+          uri: lb://product-service
+          predicates:
+            - Host=**.gulimaill.com
+
 
       globalcors:
         cors-configurations:
