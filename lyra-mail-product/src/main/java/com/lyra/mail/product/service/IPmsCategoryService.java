@@ -1,5 +1,6 @@
 package com.lyra.mail.product.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lyra.mail.product.entity.PmsCategory;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lyra.mail.product.entity.vo.Catalog2VO;
@@ -29,5 +30,5 @@ public interface IPmsCategoryService extends IService<PmsCategory> {
      */
     List<PmsCategory> findCategoryByFirstCategory();
 
-    Map<String, List<Catalog2VO>> getCatalogJson();
+    Map<String, List<Catalog2VO>> getCatalogJson() throws JsonProcessingException;
 }

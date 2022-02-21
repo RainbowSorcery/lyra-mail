@@ -1,5 +1,7 @@
 package com.lyra.mail.product.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.lyra.mail.common.result.Result;
 import com.lyra.mail.product.entity.PmsCategory;
 import com.lyra.mail.product.entity.vo.Catalog2VO;
 import com.lyra.mail.product.service.IPmsCategoryService;
@@ -30,8 +32,13 @@ public class IndexController {
     @GetMapping("index/catalog.json")
     @ResponseBody
     public Map<String, List<Catalog2VO>> getCatalogJson() {
-        Map<String, List<Catalog2VO>> catalogJson = categoryService.getCatalogJson();
 
-        return catalogJson;
+        try {
+            return categoryService.getCatalogJson();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

@@ -55,4 +55,9 @@ public class PmsSpuInfoController {
 
         return Result.ok();
     }
+
+    @GetMapping("/hello")
+    public String sayHello() {
+        return "Hello";
+    }
 }

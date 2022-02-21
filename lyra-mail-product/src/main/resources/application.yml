@@ -29,7 +29,10 @@ spring:
         namespace: a39d246a-d086-4559-9bff-89189f6d205c
   thymeleaf:
     cache: false
-    suf
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: 990728
 server:
   port: 10000
 logging:
