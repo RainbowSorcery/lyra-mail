@@ -116,36 +116,60 @@ public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryMapper, PmsCa
         });
     }
 
-    public Map<String, List<Catalog2VO>> getCatalogJsonResult() {
-        List<PmsCategory> categories = categoryMapper.selectList(null);
-        // 查询一级分类
-        List<PmsCategory> categoryByFirstCategory = getParentCid(categories, 0L);
+    public Map<String, List<Catalog2VO>> getCatalogJsonResult() throws JsonProcessingException {
+        /*
+        * 加锁流程:
+        * 1. 判断redis是否有缓存数据
+        * 2. 若有缓存数据 直接反序列化对象并进行返回
+        *    若缓存中无数据 则进行数据库查询 并将缓存结果保存至redis中
+        * */
 
-        return categoryByFirstCategory.stream().collect(Collectors.toMap((item) -> item.getCatId().toString(), (item) -> {
-            List<PmsCategory> category2List = getParentCid(categories, item.getCatId());
+        // 因为在springboot 容器中的bean都是单例 所以只要锁住当前对象即可
+        synchronized (this) {
+            String categoryCache = redisTemplate.opsForValue().get(REDIS_CACHE_CATEGORY);
 
-            // 根据一级分类id 查询二级分类
-            return category2List.stream().map((category2) -> {
-                Catalog2VO catalog2VO = new Catalog2VO();
-                catalog2VO.setCatalog1Id(item.getCatId().toString());
-                catalog2VO.setId(category2.getCatId().toString());
-                catalog2VO.setName(category2.getName());
+            if (StringUtils.isEmpty(categoryCache)) {
+                System.out.println("数据库查询");
 
-                List<PmsCategory> category3List = getParentCid(categories, category2.getCatId());
+                List<PmsCategory> categories = categoryMapper.selectList(null);
+                // 查询一级分类
+                List<PmsCategory> categoryByFirstCategory = getParentCid(categories, 0L);
+                // 数据库查询业务逻辑
+                Map<String, List<Catalog2VO>> categoryMap = categoryByFirstCategory.stream().collect(Collectors.toMap((item) -> item.getCatId().toString(), (item) -> {
+                    List<PmsCategory> category2List = getParentCid(categories, item.getCatId());
 
-                // 根据二级分类id 查询三级分类
-                List<Catalog2VO.Catalog3> catalog3s = category3List.stream().map((category3) -> {
-                    Catalog2VO.Catalog3 catalog3 = new Catalog2VO.Catalog3();
-                    catalog3.setCatalog2Id(category3.getParentCid().toString());
-                    catalog3.setId(category3.getCatId().toString());
-                    catalog3.setName(category3.getName());
-                    return catalog3;
-                }).collect(Collectors.toList());
-                catalog2VO.setCatalog3List(catalog3s);
+                    // 根据一级分类id 查询二级分类
+                    return category2List.stream().map((category2) -> {
+                        Catalog2VO catalog2VO = new Catalog2VO();
+                        catalog2VO.setCatalog1Id(item.getCatId().toString());
+                        catalog2VO.setId(category2.getCatId().toString());
+                        catalog2VO.setName(category2.getName());
 
-                return catalog2VO;
-            }).collect(Collectors.toList());
-        }));
+                        List<PmsCategory> category3List = getParentCid(categories, category2.getCatId());
+
+                        // 根据二级分类id 查询三级分类
+                        List<Catalog2VO.Catalog3> catalog3s = category3List.stream().map((category3) -> {
+                            Catalog2VO.Catalog3 catalog3 = new Catalog2VO.Catalog3();
+                            catalog3.setCatalog2Id(category3.getParentCid().toString());
+                            catalog3.setId(category3.getCatId().toString());
+                            catalog3.setName(category3.getName());
+                            return catalog3;
+                        }).collect(Collectors.toList());
+                        catalog2VO.setCatalog3List(catalog3s);
+
+                        return catalog2VO;
+                    }).collect(Collectors.toList());
+                }));
+
+                // 将缓存存入redis中
+                redisTemplate.opsForValue().set(REDIS_CACHE_CATEGORY, objectMapper.writeValueAsString(categoryMap));
+
+                return categoryMap;
+            } else {
+                // 若缓存存在 则直接反序列对象并进行返回
+                return objectMapper.readValue(categoryCache, new TypeReference<Map<String, List<Catalog2VO>>>() {});
+            }
+        }
     }
     
     private List<PmsCategory> getParentCid(List<PmsCategory> categories, Long parentCid) {
