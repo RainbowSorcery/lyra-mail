@@ -11,9 +11,14 @@ import com.lyra.mail.product.mapper.PmsCategoryMapper;
 import com.lyra.mail.product.service.IPmsCategoryService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lyra.mail.product.service.PmsCategoryBranRelationService;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +51,9 @@ public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryMapper, PmsCa
 
     @Autowired
     private PmsCategoryBranRelationService categoryBranRelationService;
+
+    @Autowired
+    private RedissonClient redissonClient;
 
     @Override
     public List<PmsCategory> categoryListByTree() {
@@ -83,6 +91,7 @@ public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryMapper, PmsCa
     }
 
     @Override
+    @CacheEvict(value = "category", allEntries = true)
     public void updateDetails(PmsCategory pmsCategory) {
         // todo 要进行更新操作时 中间表的冗余字段也要进行更新
         categoryMapper.updateById(pmsCategory);
@@ -93,6 +102,7 @@ public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryMapper, PmsCa
     }
 
     @Override
+    @Cacheable(value = {"category"}, key = "#root.method.name")
     public List<PmsCategory> findCategoryByFirstCategory() {
         QueryWrapper<PmsCategory> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("parent_cid", 0);
@@ -100,6 +110,7 @@ public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryMapper, PmsCa
     }
 
     @Override
+    @Cacheable(value = {"category"}, key = "#root.methodName", sync = true)
     public Map<String, List<Catalog2VO>> getCatalogJson() throws JsonProcessingException {
         // 从redis进行进行获取数据
         String categoryMapStrings = redisTemplate.opsForValue().get(REDIS_CACHE_CATEGORY);
@@ -123,9 +134,10 @@ public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryMapper, PmsCa
         * 2. 若有缓存数据 直接反序列化对象并进行返回
         *    若缓存中无数据 则进行数据库查询 并将缓存结果保存至redis中
         * */
-
+        RLock getCatalogJsonLock = redissonClient.getLock("getCatalogJson-lock");
+        getCatalogJsonLock.lock();
         // 因为在springboot 容器中的bean都是单例 所以只要锁住当前对象即可
-        synchronized (this) {
+        try {
             String categoryCache = redisTemplate.opsForValue().get(REDIS_CACHE_CATEGORY);
 
             if (StringUtils.isEmpty(categoryCache)) {
@@ -147,8 +159,8 @@ public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryMapper, PmsCa
 
                         List<PmsCategory> category3List = getParentCid(categories, category2.getCatId());
 
-                        // 根据二级分类id 查询三级分类
                         List<Catalog2VO.Catalog3> catalog3s = category3List.stream().map((category3) -> {
+                            // 根据二级分类id 查询三级分类
                             Catalog2VO.Catalog3 catalog3 = new Catalog2VO.Catalog3();
                             catalog3.setCatalog2Id(category3.getParentCid().toString());
                             catalog3.setId(category3.getCatId().toString());
@@ -169,6 +181,8 @@ public class PmsCategoryServiceImpl extends ServiceImpl<PmsCategoryMapper, PmsCa
                 // 若缓存存在 则直接反序列对象并进行返回
                 return objectMapper.readValue(categoryCache, new TypeReference<Map<String, List<Catalog2VO>>>() {});
             }
+        } finally {
+            getCatalogJsonLock.unlock();
         }
     }
     

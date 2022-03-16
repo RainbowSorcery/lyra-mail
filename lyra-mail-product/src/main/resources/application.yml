@@ -33,6 +33,10 @@ spring:
     host: 127.0.0.1
     port: 6379
     password: 990728
+  cache:
+    type: redis
+    redis:
+      cache-null-values: true
 server:
   port: 10000
 logging:
