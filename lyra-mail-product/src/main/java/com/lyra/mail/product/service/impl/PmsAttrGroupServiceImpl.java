@@ -9,6 +9,7 @@ import com.lyra.mail.product.entity.PmsAttrGroup;
 import com.lyra.mail.product.entity.PmsCategory;
 import com.lyra.mail.product.entity.vo.AttrGroupRelationVO;
 import com.lyra.mail.product.entity.vo.AttrGroupWithAttr;
+import com.lyra.mail.product.entity.vo.ItemVO;
 import com.lyra.mail.product.mapper.PmsAttrAttrgroupRelationMapper;
 import com.lyra.mail.product.mapper.PmsAttrGroupMapper;
 import com.lyra.mail.product.mapper.PmsAttrMapper;
@@ -172,5 +173,12 @@ public class PmsAttrGroupServiceImpl extends ServiceImpl<PmsAttrGroupMapper, Pms
 
 
         return attrGroupWithAttrs;
+    }
+
+    @Override
+    public List<ItemVO.SpuItemAttrVO> getAttrGroupWithAttrsBySpuId(Long spuId, Long catalogId) {
+        List<ItemVO.SpuItemAttrVO> spuItemAttrVOS = attrGroupMapper.selectAttrGroupWithAttrsBySpuId(spuId, catalogId);
+
+        return spuItemAttrVOS;
     }
 }

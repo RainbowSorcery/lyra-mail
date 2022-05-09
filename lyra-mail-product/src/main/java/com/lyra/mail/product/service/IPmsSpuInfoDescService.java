@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IPmsSpuInfoDescService extends IService<PmsSpuInfoDesc> {
 
+    PmsSpuInfoDesc getDesc(Long spuId);
 }

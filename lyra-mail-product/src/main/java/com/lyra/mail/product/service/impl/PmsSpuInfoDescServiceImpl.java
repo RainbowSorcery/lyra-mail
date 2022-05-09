@@ -1,9 +1,11 @@
 package com.lyra.mail.product.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lyra.mail.product.entity.PmsSpuInfoDesc;
 import com.lyra.mail.product.mapper.PmsSpuInfoDescMapper;
 import com.lyra.mail.product.service.IPmsSpuInfoDescService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,5 +18,14 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PmsSpuInfoDescServiceImpl extends ServiceImpl<PmsSpuInfoDescMapper, PmsSpuInfoDesc> implements IPmsSpuInfoDescService {
+    @Autowired
+    private PmsSpuInfoDescMapper spuInfoDescMapper;
 
+    @Override
+    public PmsSpuInfoDesc getDesc(Long spuId) {
+        QueryWrapper<PmsSpuInfoDesc> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("spu_id", spuId);
+
+        return spuInfoDescMapper.selectOne(queryWrapper);
+    }
 }

@@ -2,4 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lyra.mail.product.mapper.PmsSkuSaleAttrValueMapper">
 
+    <select id="getSaleAttrsBySpuId" resultType="com.lyra.mail.product.entity.vo.skuItemSaleAttrVO">
+        select t2.attr_id as attrId, t2.attr_name as attrName, group_concat(distinct t2.attr_value) as attrValue
+        from pms_sku_info t1
+                 left join pms_sku_sale_attr_value t2 on t2.sku_id = t1.sku_id
+        where t1.spu_id = 13
+        group by t2.attr_id
+    </select>
 </mapper>

@@ -3,6 +3,7 @@ package com.lyra.mail.product.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.lyra.mail.product.entity.PmsSkuInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lyra.mail.product.entity.vo.ItemVO;
 
 /**
  * <p>
@@ -15,4 +16,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IPmsSkuInfoService extends IService<PmsSkuInfo> {
 
     IPage<PmsSkuInfo> skuPageList(Integer current, Integer pageSize, Long catelogId, Long brandId, Integer min, Integer max, String key);
+
+    ItemVO item(Long skuId);
 }

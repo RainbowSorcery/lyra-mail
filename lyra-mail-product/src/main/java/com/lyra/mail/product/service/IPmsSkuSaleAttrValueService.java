@@ -2,6 +2,9 @@ package com.lyra.mail.product.service;
 
 import com.lyra.mail.product.entity.PmsSkuSaleAttrValue;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lyra.mail.product.entity.vo.ItemVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IPmsSkuSaleAttrValueService extends IService<PmsSkuSaleAttrValue> {
 
+    List<ItemVO.skuItemSaleAttrVO> getSaleAttrsBySpuId(Long spuId);
 }

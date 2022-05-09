@@ -2,4 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lyra.mail.product.mapper.PmsAttrGroupMapper">
 
+    <resultMap id="SpuItemAttrVoResultMap" type="com.lyra.mail.product.entity.vo.SpuItemAttrVO" >
+        <result property="groupName" column="group_ame" />
+
+        <collection property="spuItemBaseAttrs" ofType="com.lyra.mail.product.entity.vo.SpuItemBaseAttr" >
+            <result column="attr_name" property="attrName" />
+            <result column="attr_value" property="attrValue" />
+        </collection>
+    </resultMap>
+
+    <select id="selectAttrGroupWithAttrsBySpuId"
+            resultMap="SpuItemAttrVoResultMap">
+        select t4.spu_id, t1.attr_group_name as group_ame, t1.attr_group_id, t3.attr_id, t3.attr_name as attr_name, t4.attr_value
+        from pms_attr_group t1
+                 left join pms_attr_attrgroup_relation t2 on t2.attr_group_id = t1.attr_group_id
+                 left join pms_attr t3 on t3.attr_id = t2.attr_id
+                 left join pms_product_attr_value t4 on t4.attr_id = t3.attr_id
+        where t1.catelog_id = #{categoryId}
+          and t4.spu_id = #{spuId}
+    </select>
 </mapper>
