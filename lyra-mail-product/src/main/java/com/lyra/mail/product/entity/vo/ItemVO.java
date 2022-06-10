@@ -7,10 +7,15 @@ import com.lyra.mail.product.entity.PmsSpuInfoDesc;
 import java.util.List;
 
 public class ItemVO {
+    // 商品信息
     private PmsSkuInfo skuInfo;
+    // 商品图片
     private List<PmsSkuImages> skuImages;
+    // 商品介绍图
     private PmsSpuInfoDesc spuInfoDesc;
+    // 销售属性
     private List<skuItemSaleAttrVO> saleAttr;
+    // 商品规格
     private List<SpuItemAttrVO> spuItemAttrs;
 
     private Boolean hasStock = true;
@@ -24,7 +29,9 @@ public class ItemVO {
     }
 
     public static class SpuItemAttrVO {
+        // 属性组名称 如主体
         private String groupName;
+        // 组下的不同属性 如品牌 型号等
         private List<SpuItemBaseAttr> spuItemBaseAttrs;
 
         public String getGroupName() {
@@ -45,7 +52,9 @@ public class ItemVO {
     }
 
     public static class SpuItemBaseAttr {
+        // 属性名称
         private String attrName;
+        // 属性值
         private String attrValue;
 
         public String getAttrName() {
@@ -66,8 +75,11 @@ public class ItemVO {
     }
 
     public static class skuItemSaleAttrVO {
+        //销售属性id
         private Long attrId;
+        // 销售属性名称
         private String attrName;
+        // 销售属性值 因为销售属性是一对多的 比如一个颜色分类下有多个不同的颜色, 比如销售版本有128GB 64GB
         private List<String> attrValue;
 
         public Long getAttrId() {

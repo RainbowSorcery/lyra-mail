@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
@@ -79,23 +80,41 @@ public class PmsSkuInfoServiceImpl extends ServiceImpl<PmsSkuInfoMapper, PmsSkuI
     public ItemVO item(Long skuId) {
         ItemVO itemVO = new ItemVO();
 
+        CompletableFuture<PmsSkuInfo> pmsSkuInfoCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            PmsSkuInfo pmsSkuInfo = skuInfoMapper.selectById(skuId);
+            itemVO.setSkuInfo(pmsSkuInfo);
 
-        PmsSkuInfo pmsSkuInfo = skuInfoMapper.selectById(skuId);
-        itemVO.setSkuInfo(pmsSkuInfo);
+            return pmsSkuInfo;
+        }, threadPoolExecutor);
 
-        List<PmsSkuImages> skuImages = skuImagesService.getSkuImagesBySkuId(skuId);
-        itemVO.setSkuImages(skuImages);
+        CompletableFuture<Void> spuInfoDescCompletableFuture = pmsSkuInfoCompletableFuture.thenAcceptAsync((result) -> {
+            PmsSpuInfoDesc spuInfoDesc = spuInfoDescService.getDesc(result.getSpuId());
+            itemVO.setSpuInfoDesc(spuInfoDesc);
+        }, threadPoolExecutor);
 
-        Long spuId = pmsSkuInfo.getSpuId();
-        PmsSpuInfoDesc spuInfoDesc = spuInfoDescService.getDesc(spuId);
-        itemVO.setSpuInfoDesc(spuInfoDesc);
+        CompletableFuture<Void> spuItemAttrCompletableFuture = pmsSkuInfoCompletableFuture.thenAcceptAsync((result) -> {
+            List<ItemVO.SpuItemAttrVO> spuItemAttrVOS = attrGroupService.getAttrGroupWithAttrsBySpuId(result.getSpuId(), result.getCatalogId());
+            itemVO.setSpuItemAttrs(spuItemAttrVOS);
+        }, threadPoolExecutor);
 
 
-        List<ItemVO.SpuItemAttrVO> spuItemAttrVOS = attrGroupService.getAttrGroupWithAttrsBySpuId(spuId, pmsSkuInfo.getCatalogId());
-        itemVO.setSpuItemAttrs(spuItemAttrVOS);
+        CompletableFuture<Void> skuImagesCompletableFuture = CompletableFuture.runAsync(() -> {
+            List<PmsSkuImages> skuImages = skuImagesService.getSkuImagesBySkuId(skuId);
+            itemVO.setSkuImages(skuImages);
+        }, threadPoolExecutor);
 
-        List<ItemVO.skuItemSaleAttrVO> skuItemSaleAttrVOS = skuSaleAttrValueService.getSaleAttrsBySpuId(spuId);
-        itemVO.setSaleAttr(skuItemSaleAttrVOS);
+        CompletableFuture<Void> saleAttrCompletableFuture = pmsSkuInfoCompletableFuture.thenAcceptAsync((result) -> {
+            List<ItemVO.skuItemSaleAttrVO> skuItemSaleAttrVOS = skuSaleAttrValueService.getSaleAttrsBySpuId(result.getSpuId());
+            itemVO.setSaleAttr(skuItemSaleAttrVOS);
+        }, threadPoolExecutor);
+
+
+        CompletableFuture.allOf(pmsSkuInfoCompletableFuture,
+                spuInfoDescCompletableFuture,
+                spuItemAttrCompletableFuture,
+                skuImagesCompletableFuture,
+                saleAttrCompletableFuture);
+
 
         return itemVO;
     }

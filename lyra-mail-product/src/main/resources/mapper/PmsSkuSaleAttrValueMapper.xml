@@ -6,7 +6,7 @@
         select t2.attr_id as attrId, t2.attr_name as attrName, group_concat(distinct t2.attr_value) as attrValue
         from pms_sku_info t1
                  left join pms_sku_sale_attr_value t2 on t2.sku_id = t1.sku_id
-        where t1.spu_id = 13
+        where t1.spu_id = #{spuId}
         group by t2.attr_id
     </select>
 </mapper>

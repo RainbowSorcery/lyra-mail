@@ -26,6 +26,7 @@
         <module>lyra-mail-admin</module>
         <module>lyra-mail-third-party</module>
         <module>lyra-mail-search</module>
+        <module>lyra-mail-auth</module>
     </modules>
 
     <properties>

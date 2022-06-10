@@ -12,6 +12,22 @@ spring:
           - data-id: oss-config.YAML
             refresh: true
         namespace: a39d246a-d086-4559-9bff-89189f6d205c
-
+  mail:
+    username: 365373011@qq.com
+    password: fouoqcvqvcfobgii
+    host: smtp.qq.com
+    port: 465
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+          port: 994
+          auth: true
+          starttls:
+            enable: true
+            required: true
 server:
   port: 9001

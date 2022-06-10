@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: user-auth-service
+  cloud:
+    nacos:
+      config:
+        file-extension: YAML
+        server-addr: 127.0.0.1:8848
+        shared-configs:
+          - data-id: nacos-register.YAML
+            refresh: true
+          - data-id: oss-config.YAML
+            refresh: true
+        namespace: a39d246a-d086-4559-9bff-89189f6d205c
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/mail_user
+    username: root
+    password: 365373011
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 30000
+      minimum-idle: 5
+      max-lifetime: 20
+      auto-commit: true
+      idle-timeout: 60000
+      pool-name: DateSourceHikariCP
+      maximum-pool-size: 1800000
+      connection-test-query: SELECT 1
+  thymeleaf:
+    cache: false
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: 990728
+  cache:
+    type: redis
+    redis:
+      cache-null-values: true
+
+server:
+  port: 9002
